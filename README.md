@@ -7,7 +7,8 @@ SCWS:http://www.xunsearch.com/scws/<br />
 ----
 	1】自行编译
 		```Bash
-		gcc scws.c -shared -o scws.so -I/usr/local/Cellar/python3/3.6.4_2/Frameworks/Python.framework/Versions/3.6/include/python3.6m -I/usr/local/scws/include/scws -fPIC -L/usr/local/scws/lib/ -L/usr/local/Cellar/python3/3.6.4_2/Frameworks/Python.framework/Versions/3.6/lib/ -lscws -lpython3.6	```
+		gcc scws.c -shared -o scws.so -I/usr/local/Cellar/python3/3.6.4_2/Frameworks/Python.framework/Versions/3.6/include/python3.6m -I/usr/local/scws/include/scws -fPIC -L/usr/local/scws/lib/ -L/usr/local/Cellar/python3/3.6.4_2/Frameworks/Python.framework/Versions/3.6/lib/ -lscws -lpython3.6	
+		```
 		
 		我的是Mac安装了python2和python3,so 路径包含比较长。
 	
