@@ -19,7 +19,8 @@ gcc scws.c -shared -o scws.so -I/usr/local/Cellar/python3/3.6.4_2/Frameworks/Pyt
 
 	生成的scws.so 文件拷贝到你python的sites-packages下，然后fenci.py可自行参考修改，放到哪里无所谓，能引入到你项目就OK
 
-
+	
+	###请自行修改scws.c中的Python头文件
 
 注意：
 ----
