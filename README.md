@@ -21,9 +21,25 @@ gcc scws.c -shared -o scws.so -I/usr/local/Cellar/python3/3.6.4_2/Frameworks/Pyt
 
 	
 	###请自行修改scws.c中的Python头文件
+	
+直接setup安装：
+----
+	创建setup.py文件.
+```Python
+from distutils.core import setup,Extension
+MOD = 'scws' #模块名
+setup(name=MOD,ext_modules=[Extension(MOD,sources=['scws.c'])]) #源文件名
+```
+```Python
+python3 setup.py build 
+python3 setup.py install
+```
 
 注意：
 ----
+	若import出现“ImportError: libscws.so.1: cannot open shared object file: No such file or directory”错误。
+	请将libscws.so.1文件创建软连接到/lib64中应该就可以解决“ln -s /usr/local/scws/lib/libscws.so.1 /lib64/libscws.so.1”。如不行请自行ldd scws.so文件查看库文件地址，将其软连接过去即可
+	
 	请使用python3
 	若python2请clone https://github.com/assad2008/Python-scws
 
