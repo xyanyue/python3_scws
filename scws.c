@@ -23,6 +23,14 @@ static PyObject * scws_set_xdb(PyObject * self,PyObject * args){
     scws_set_dict(s, xdb, SCWS_XDICT_XDB);
     return Py_BuildValue("i",1);
 }
+static PyObject * scws_set_txt(PyObject * self,PyObject * args){
+    const char * dictpath;
+    if (!PyArg_ParseTuple(args, "s",&dictpath)){
+        return NULL;
+    }
+    scws_set_dict(s, dictpath, SCWS_XDICT_TXT);
+    return Py_BuildValue("i",1);
+}
 
 static PyObject * scws_scws_add_dict(PyObject * self,PyObject * args){
     const char * dictpath;
@@ -68,7 +76,7 @@ static PyObject * scws_scws_set_multi(PyObject * self,PyObject * args){
         return NULL;
     }
     scws_set_multi(s, mode);
-    return Py_BuildValue("i",1);	
+    return Py_BuildValue("i",1);
 }
 
 static PyObject * scws_scws_set_duality(PyObject * self,PyObject * args){
@@ -77,13 +85,12 @@ static PyObject * scws_scws_set_duality(PyObject * self,PyObject * args){
         return NULL;
     }
     scws_set_ignore(s, mode);
-    return Py_BuildValue("i",1);	
+    return Py_BuildValue("i",1);
 }
 
 
 static PyObject * scws_get_res(PyObject * self,PyObject * args){
     const char *text;
-    int sts;
 
     if (!PyArg_ParseTuple(args, "s",&text))
         return NULL;
@@ -91,12 +98,12 @@ static PyObject * scws_get_res(PyObject * self,PyObject * args){
     scws_res_t res, cur;
     scws_send_text(s, text, strlen(text));
     PyObject * v;
-    int i = 0;
-    int total = 0;
-    long idf;
-    scws_res_t head;
+    // int i = 0;
+    // int total = 0;
+    // long idf;
+    // scws_res_t head;
     v = PyList_New(0);
-    double d;
+    // double d;
     while ((res = cur = scws_get_result(s)))
     {
         while(cur != NULL){
@@ -112,15 +119,43 @@ static PyObject * scws_get_res(PyObject * self,PyObject * args){
     scws_free_result(res);
     return Py_BuildValue("O",v);
 }
+static PyObject * scws_get_top(PyObject * self,PyObject * args){
+    const char *text;
 
-static PyObject * 
-scws_scws_free(PyObject * self,PyObject * args){
+    if (!PyArg_ParseTuple(args, "s",&text))
+        return NULL;
+
+    scws_top_t res, cur;
+    scws_send_text(s, text, strlen(text));
+    PyObject * v;
+
+    v = PyList_New(0);
+    // double d;
+    res = cur = scws_get_tops(s,10,"@");
+
+    while(cur != NULL){
+        PyList_Append(v,Py_BuildValue("(S,d)",
+            //PyString_FromStringAndSize(text+cur->off,cur->len),
+            //PyString_FromString(cur->attr),
+			//PyUnicode_FromStringAndSize(text+cur->off,cur->len),
+			PyUnicode_FromFormat("%s",cur->word),
+			cur->weight
+			)
+		);
+        cur = cur->next;
+    }
+
+    scws_free_tops(res);
+    return Py_BuildValue("O",v);
+}
+static PyObject * scws_scws_free(PyObject * self,PyObject * args){
     scws_free(s);
     return Py_BuildValue("i", 1);
 }
 static PyMethodDef ScwsMethods[] = {
     {"scws_set_rule",  scws_scws_set_rule, METH_VARARGS, ""},
     {"scws_set_xdb",  scws_set_xdb, METH_VARARGS, ""},
+    {"scws_set_txt",  scws_set_txt, METH_VARARGS, ""},
     {"scws_set_charset",  scws_scws_set_charset, METH_VARARGS, ""},
     {"scws_new",  scws_scws_new, METH_VARARGS, ""},
     {"scws_free",  scws_scws_free, METH_VARARGS, ""},
@@ -129,8 +164,9 @@ static PyMethodDef ScwsMethods[] = {
     {"scws_set_duality", scws_scws_set_duality, METH_VARARGS, ""},
     {"scws_add_dict", scws_scws_add_dict, METH_VARARGS, ""},
     {"get_res",  scws_get_res, METH_VARARGS, ""},
+    {"get_tops",  scws_get_top, METH_VARARGS, ""},
     {NULL, NULL, 0, NULL}
-}; 
+};
 static struct PyModuleDef scws_module = {
 	PyModuleDef_HEAD_INIT,
 	"scws",        // name of module /
