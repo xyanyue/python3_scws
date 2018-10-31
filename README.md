@@ -27,8 +27,18 @@ gcc scws.c -shared -o scws.so -I/usr/local/Cellar/python3/3.6.4_2/Frameworks/Pyt
 	创建setup.py文件.
 ```Python
 from distutils.core import setup,Extension
+
 MOD = 'scws' #模块名
-setup(name=MOD,ext_modules=[Extension(MOD,sources=['scws.c'])]) #源文件名
+setup(name=MOD,ext_modules=[
+		Extension(
+			MOD,
+			sources=['scws.c'],
+			include_dirs = ['/usr/local/scws/include/scws/'],
+			library_dirs=['/usr/local/scws/lib/'],
+			libraries=['scws']
+		)
+	]
+) #源文件名
 ```
 ```Python
 python3 setup.py build 
