@@ -1,4 +1,4 @@
-#include </usr/local/Cellar/python3/3.6.4_2/Frameworks/Python.framework/Versions/3.6/include/python3.6m/Python.h>
+#include <Python.h>
 #include "scws.h"
 #include <string.h>
 
